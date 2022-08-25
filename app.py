@@ -2,46 +2,27 @@ from flask import Flask, jsonify, request
 import json
 from flask_cors import CORS
 from googleDrive import downloadFiles, uploadFiles
-from pdfToTable import pdfToTable
+from pdfToTable import pdfToTable,getFilesToProcess
 import os
 
 # app = Flask(__name__)
 # cors = CORS(app)
-
+path = "./Week/"
 # @app.route('/')
 def scriptStarted():
-    print("\nScript started...\n")
-    print("\nScript is running...\n")
+    print("\nScript started...")
+    print("Script is running...")
     return "Script Started"
 
 def scriptEnded():
-    print("Script Ended successfully...")
+    print("Script Ended successfully!\n")
     return "Script Ended"
 
-# @app.route('/download',)
-def download():
-    info = downloadFiles()
-    print(info)
-    return info
-
-# @app.route('/upload',)
-def uploaded():
-    info = uploadFiles()
-    return info
-
-# @app.route('/Processing',)
-def processing():
-    directory = "./DownloadedFiles"
-    outputPath = "./PO Order/"
-    
-    for f in os.listdir("./DownloadedFiles"):
-        fres = f.replace('.pdf', '')
-        info = pdfToTable(directory+"/"+f, outputPath=outputPath + fres + ".xlsx")
-    return info
 
 if __name__ == "__main__":
     scriptStarted()
-    download()
-    uploaded()
+    downloadFiles(path)
+    getFilesToProcess(path+"DownloadFiles", path+"UploadFiles")
+    uploadFiles(path+"UploadFiles")
     scriptEnded()
     # app.run(debug=True)
