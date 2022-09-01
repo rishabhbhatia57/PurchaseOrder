@@ -2,15 +2,25 @@ import pandas as pd
 import os
 import xlsxwriter
 
-def colSplitting():
-    getFilesDir = "./PO Order/"
-    for f in os.listdir("./PO Order"):
-        print("\nAccessing '"+f+"' right now: \n")
-        df = pd.read_excel(getFilesDir+f)
-        ListofCol = list(df.columns)
-        for i in range(1,len(ListofCol)):
-            df2 = df.loc[:, ['POItem', ListofCol[i]]]
-            df2.to_excel("./ColumnSplitting/POItem"+"_"+ListofCol[i]+" "+f, index = False)
-            print("\n\t"+str(i)+" Created splitted colmuns: POItem_"+ListofCol[i]+"\n")
+def colSplitting(inputpath, outputpath):
+    isExist = os.path.exists(inputpath)
+    if not isExist:
+        print("Can't find the ProcessedFiles folder, please check the file structure again!")
+        return
+    else:
+        isExist = os.path.exists(outputpath)
+        if not isExist:
+            print("Creating a new folder 'ColumnSplitting' at location "+ outputpath)
+            os.makedirs(outputpath)
+            print("The new directory is created!")
+        for f in os.listdir(inputpath):
+            print("Accessing '"+f+"' right now: ")
+            df = pd.read_excel(inputpath+"/"+f)
+            ListofCol = list(df.columns)
+            for i in range(1,len(ListofCol)):   
+                df2 = df.loc[:, ['ArticleEAN', ListofCol[i]]]
+                df2.to_excel(outputpath+"/"+str(ListofCol[i])+" "+f, index = False)
+            print("Column Splitting for file "+f+" is comepleted.")
 
     return "Splitting Completed"
+

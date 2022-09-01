@@ -6,6 +6,7 @@ import csv
 import os
 import xlsxwriter
 import time
+from datetime import datetime
 # inputPath = '4000441961.pdf'
 # outputPath = "output.xlsx"
 
@@ -18,7 +19,7 @@ def getFilesToProcess(inputFolderPath,outputFolderPath):
     else:
         isExist = os.path.exists(outputFolderPath)
         if not isExist:
-            print("Creating a new folder 'UploadFiles' at location "+ outputFolderPath)
+            print("Creating a new folder 'ProcessedFiles' at location "+ outputFolderPath)
             os.makedirs(outputFolderPath)
             print("The new directory is created!")
         if len(os.listdir(inputFolderPath)) == 0:
@@ -32,15 +33,14 @@ def getFilesToProcess(inputFolderPath,outputFolderPath):
             print("Successfully Converted all the PDF Files to Excel Files!")
             print("Conversion Completed in "+"{:.2f}".format(time.time() - startedProcessing,2)+ " seconds!")
 
-            return "Converted all the PDF Files to Excel Files!"
 
 # Extracting data from pdf and storing in csv
 def pdfToTable(inputPath, outputPath):
     startedProcessing = time.time()
-    intermediateCSV = 'csvoutput.csv'
-    intermediateExcel = 'sheetoutput.xlsx'
-    intermediateExcel2 = 'sheetoutput2.xlsx'
-    intermediateoutputPath = 'output1.xlsx'
+    intermediateCSV = './Week/IntermediateFolder/csvoutput.csv'
+    intermediateExcel = './Week/IntermediateFolder/sheetoutput.xlsx'
+    intermediateExcel2 = './Week/IntermediateFolder/sheetoutput2.xlsx'
+    intermediateoutputPath = './Week/IntermediateFolder/output1.xlsx'
     # os.remove(outputPath)
     # os.remove(intermediateExcel)
     # os.remove(intermediateCSV)
@@ -107,8 +107,9 @@ def pdfToTable(inputPath, outputPath):
     IGSTAmt = endcolumn+8
     VendorPenalty = endcolumn+9
     VendorName = endcolumn+8
-    SupplyLocation = endcolumn+9
+    ReceivingLocation = endcolumn+9
     PONumber = endcolumn+10
+    VendorCode = endcolumn+11
     for i in range(1, endrow):
         for j in range(1, endcolumn+1):
             if sheet.cell(i,j).value == "CGST":
@@ -174,8 +175,9 @@ def pdfToTable(inputPath, outputPath):
     sheet["S1"] = "IGSTAmt"
     sheet["T1"] = "Vendor Penalty"
     sheet["U1"] = "Vendor Name"
-    sheet["V1"] = "Supply Location"
+    sheet["V1"] = "Receiving Location"
     sheet["W1"] = "PO Number"
+    sheet["X1"] = "Vendor Code"
 
     # workbook = xlsxwriter.Workbook(intermediateExcel, {'strings_to_numbers': True})
     df2 = pd.read_csv(filepath_or_buffer= intermediateCSV, on_bad_lines='skip')
@@ -200,29 +202,28 @@ def pdfToTable(inputPath, outputPath):
             endrow = i
             break
 
-        
-    txt = sheet2.cell(2, 1).value.replace(":","")
-    x = txt.split('%')
-    POnumbertext = sheet2.cell(5, 1).value.replace(":", "")
-    y = POnumbertext.split('%')
-    # print(y)
+    PONumberRow = 1
+    for i in range(1, 25):
+        if sheet2.cell(i,1).value != None and "P. O. Number" in sheet2.cell(i,1).value:
+            PONumberRow = i
+            break
+
+    VendorNameValue = sheet2.cell(2, 1).value.replace(":","").split('%')[1]
+    VendorCodeValue = sheet2.cell(2, 1).value.replace(":","").split('%')[3]
+    ReceivingLocationValue = sheet2.cell(4, 1).value.replace(":","").split('%')[3]
+    PONumValue = sheet2.cell(PONumberRow, 1).value.replace(":", "").split('%')[1]
     for i in range(2, endrow):
-        sheet.cell(i, VendorName).value = x[1]
-        sheet.cell(i, SupplyLocation).value = str(x[5]+" "+x[6])
-        sheet.cell(i, PONumber).value = y[1]
-    
+        sheet.cell(i, VendorName).value = VendorNameValue
+        sheet.cell(i, ReceivingLocation).value = ReceivingLocationValue
+        sheet.cell(i, PONumber).value = PONumValue
+        sheet.cell(i, VendorCode).value = VendorCodeValue
+     
+    # get  Delete row count
     lastrow = 1
     for i in range(endrow, 1000000):
-        if sheet.cell(i, 1).value != None and sheet.cell(endrow, 1).value != "":
-            lastrow = i
-        else:
+        if sheet.cell(i,1).value != None and "Other Conditions" in sheet.cell(i,1).value:
+            lastrow = i+5
             break
-    # print(endrow)
-    # print(lastrow)
-    
-    # for i in range(lastrow+1, endrow, -1):
-    #     # if sheet.cell(endrow, 1).value != None and sheet.cell(endrow, 1).value != "":
-    #     sheet.delete_rows(i)
            
     while endrow <= lastrow:
         sheet.delete_rows(lastrow)
@@ -233,7 +234,7 @@ def pdfToTable(inputPath, outputPath):
 
     # workbook2 = xlsxwriter.Workbook(outputPath, {'strings_to_numbers': True})
     # workbook2.close()
-    print("Converted '"+ inputPath + "' to '" + outputPath+"'"+ " in "+ "{:.2f}".format(time.time() - startedProcessing,2)+ " seconds!")
+    print("Converted '"+ inputPath + "' to '" + outputPath+"'"+ " in "+ "{:.2f}".format(time.time() - startedProcessing,2)+ " seconds.")
     return "Conversion Complete!"
 
 

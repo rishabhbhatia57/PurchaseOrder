@@ -4,6 +4,8 @@ from pydrive.drive import GoogleDrive
 from flask import Flask, redirect , url_for, render_template, request, jsonify
 import json
 import time
+from datetime import datetime
+
 gauth = GoogleAuth()
 drive = GoogleDrive(gauth)
 
@@ -14,10 +16,10 @@ PO_Summery_folder_ID = '1_vXO-Ks6EK26wMoUOQvSte7KhbaMnF7l'
 def downloadFiles(path):
     startedDownload = time.time()
     # Checking if the folder exists or not, if doesnt exists, then script will create one.
-    downloadPath = path + 'DownloadFiles'
+    downloadPath = path + '/DownloadFiles'
     isExist = os.path.exists(downloadPath)
     if not isExist:
-        print("Creating a new folder 'DownloadFiles' at location "+ path)
+        print("Creating a new folder 'DownloadFiles' at location "+ downloadPath)
         os.makedirs(downloadPath)
         print("The new directory is created!")
 
@@ -37,7 +39,7 @@ def uploadFiles(path):
     startedUpload = time.time()
     isExist = os.path.exists(path)
     if isExist == False:
-        print("Can't find the UploadFiles folder, please check the file structure again!")
+        print("Can't find the ProcessedFiles folder, please check the file structure again!")
         return
     else:
         if len(os.listdir(path)) == 0:
