@@ -3,7 +3,7 @@ import json
 from flask_cors import CORS
 from googleDrive import downloadFiles, uploadFiles
 from pdfToTable import pdfToTable,getFilesToProcess
-from colSpliiting import colSplitting
+from colSplitting import colSplitting
 from mergeExcels import mergeExcelsToOne
 from pivotTable import mergeToPivot
 import os
