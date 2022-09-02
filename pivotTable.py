@@ -31,8 +31,9 @@ def mergeToPivot():
     for i in range(5,rows):
         pivotSheet.cell(i,cols-1).value = '='+openpyxl.utils.cell.get_column_letter(cols-2)+str(i+2)+'-'+openpyxl.utils.cell.get_column_letter(cols-3)+str(i+2)
 
-    pivotSheet.insert_rows(1)
-    pivotSheet.insert_rows(1)
+    pivotSheet.insert_rows(1,2)
+    pivotSheet.insert_rows(5) # IGST/CGST Type
+    pivotSheet.cell(5,1).value = 'IGST/CGST Type'
 
     todayDate = datetime.today().strftime('%Y-%m-%d')
     pivotSheet.cell(2,3).value = 'Processing Date'

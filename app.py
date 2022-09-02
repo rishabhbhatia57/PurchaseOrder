@@ -73,7 +73,7 @@ if __name__ == "__main__":
     # mergeExcelsToOne(path+"/ProcessedFiles", path+"/MergeExcelsFiles")
 
 # 7. PivotTable - Template Creation
-    # mergeToPivot()
+    mergeToPivot()
     
 # 7. Notify that the script is Ended
     scriptEnded()

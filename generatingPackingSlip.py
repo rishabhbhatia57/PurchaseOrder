@@ -67,8 +67,6 @@ def generatingPackingSlip():
 
         # Copy EAN to template sheet
 
-        # column = 2
-
         Trows = 8
         Tcols = 5
         for row in range(7,rows):
