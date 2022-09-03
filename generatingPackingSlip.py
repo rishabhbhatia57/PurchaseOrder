@@ -88,7 +88,7 @@ def generatingPackingSlip():
                 # TemplateSheet.cell(Trows,Tcols+3).value = "="+formulaSheet.cell(6,2).value.replace("Val",str(Trows))
 
                 # Closing stk
-                TemplateSheet.cell(Trows,Tcols+5).value = InputSheet.cell(row,).value
+                # TemplateSheet.cell(Trows,Tcols+5).value = InputSheet.cell(row,).value
 
                 #Cls stk vs order
                 # TemplateSheet.cell(Trows,Tcols+6).value = InputSheet.cell(row,).value
