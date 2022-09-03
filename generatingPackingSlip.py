@@ -12,8 +12,8 @@ import shutil
 def generatingPackingSlip():
     startedTemplating = time.time()
     sourcePivot = "./Week/PivotTable/PivotTableoutput.xlsx"
-    source = "./Week/PackingSlip-Template.xlsx"
-    destination = "./Week/TemplateFile.xlsx"
+    source = "./Week/RequiredFiles/PackingSlip-Template.xlsx"
+    destination = "./Week/RequiredFiles/TemplateFile.xlsx"
     
 
     # Making Copy of template file
@@ -31,12 +31,10 @@ def generatingPackingSlip():
     df = pd.DataFrame(InputSheet, index=None)
     rows = len(df.axes[0])
     cols = len(df.axes[1])
-    # df = pd.DataFrame(TemplateSheet, index=None)
-    # Trows = len(df.axes[0])
-    # Tcols = len(df.axes[1])
-    # print(rows,cols)
 
-    # Logic for adding Data from Pivot file to Packing Slip template
+
+    formulaWorksheet = load_workbook('./Week/RequiredFiles/FormulaSheet.xlsx')
+    formulaSheet = formulaWorksheet.active
     
     
     for column in range(2,cols-3):
@@ -62,11 +60,7 @@ def generatingPackingSlip():
         TemplateSheet.cell(5,3).value = InputSheet.cell(5,column).value
         TemplateSheet.cell(4,2).value = InputSheet.cell(5,column).value
 
-        # StyleName
-        TemplateSheet.cell(8,1).value = "=VLOOKUP(,'C:/Users/HP/Desktop/[Book1.xlsx]Sheet1'!$A$2:$D$22292,2,FALSE)"
-
         # Copy EAN to template sheet
-
         Trows = 8
         Tcols = 5
         for row in range(7,rows):
@@ -80,11 +74,34 @@ def generatingPackingSlip():
                 # Copy EAN to template sheet
                 TemplateSheet.cell(Trows,Tcols-3).value = InputSheet.cell(row,1).value
 
-                # Closing Stock
-                # TemplateSheet.cell(Trows,Tcols+5).value = InputSheet.cell(row,column+1).value
-
-
                 # VLOOKUP
+                # StyleName
+                TemplateSheet.cell(Trows,Tcols-4).value = "="+formulaSheet.cell(3,2).value.replace("Val",str(Trows))
+
+                # style
+                # TemplateSheet.cell(Trows,Tcols-2).value =  "="+formulaSheet.cell(4,2).value.replace("Val",str(Trows))
+
+                # SADM SKU
+                TemplateSheet.cell(Trows,Tcols-1).value = "="+formulaSheet.cell(5,2).value.replace("Val",str(Trows))
+
+                # Rate (in Rs.) Order file
+                # TemplateSheet.cell(Trows,Tcols+3).value = "="+formulaSheet.cell(6,2).value.replace("Val",str(Trows))
+
+                # Closing stk
+                TemplateSheet.cell(Trows,Tcols+5).value = InputSheet.cell(row,).value
+
+                #Cls stk vs order
+                # TemplateSheet.cell(Trows,Tcols+6).value = InputSheet.cell(row,).value
+
+                # LOCATION2
+                # TemplateSheet.cell(Trows,Tcols+7).value = "="+formulaSheet.cell(7,2).value.replace("Val",str(Trows))
+
+                #BULK  / DTA  BULK  /  EOSS LOC
+                # TemplateSheet.cell(Trows,Tcols+8).value = "="+formulaSheet.cell(8,2).value.replace("Val",str(Trows))
+
+                #MRP
+                # TemplateSheet.cell(Trows,Tcols+9).value = "="+formulaSheet.cell(9,2).value.replace("Val",str(Trows))
+
                 
                 Trows += 1 
 
