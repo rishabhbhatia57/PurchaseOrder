@@ -21,7 +21,7 @@ def generatingPackingSlip():
     # print("File copied successfully.")
 
     # Load work vook and sheets
-    InputWorkbook = load_workbook(sourcePivot)
+    InputWorkbook = load_workbook(sourcePivot,data_only=True)
     # TemplateWorkbook = load_workbook(destination)
 
     InputSheet = InputWorkbook.active
@@ -33,8 +33,8 @@ def generatingPackingSlip():
     cols = len(df.axes[1])
 
 
-    formulaWorksheet = load_workbook('./Week/RequiredFiles/FormulaSheet.xlsx')
-    formulaSheet = formulaWorksheet.active
+    formulaWorksheet = load_workbook('./Week/Master Files/FormulaSheet.xlsx',data_only=True)
+    formulaSheet = formulaWorksheet['FormulaSheet']
     
     
     for column in range(2,cols-3):
@@ -44,10 +44,10 @@ def generatingPackingSlip():
         print("File copied successfully.")
 
         # Load work vook and sheets
-        TemplateWorkbook = load_workbook(destination)
+        TemplateWorkbook = load_workbook(destination, data_only=True)
         TemplateSheet = TemplateWorkbook['ORDER']
 
-        TemplateSheet.cell(3,1).value = InputSheet.cell(3,2).value # Vendor Name
+        
         TemplateSheet.cell(6,4).value = InputSheet.cell(7,2).value # Order Name
         TemplateSheet.cell(5,1).value = InputSheet.cell(7,2).value # Order Name
         # PO Number
@@ -59,6 +59,9 @@ def generatingPackingSlip():
         # Receving Location
         TemplateSheet.cell(5,3).value = InputSheet.cell(5,column).value
         TemplateSheet.cell(4,2).value = InputSheet.cell(5,column).value
+
+        TemplateSheet.cell(1,3).value = 'SGST/IGST'
+        TemplateSheet.cell(1,4).value = InputSheet.cell(6,column).value # IGST/SGST Type
 
         # Copy EAN to template sheet
         Trows = 8
@@ -76,31 +79,31 @@ def generatingPackingSlip():
 
                 # VLOOKUP
                 # StyleName
-                TemplateSheet.cell(Trows,Tcols-4).value = "="+formulaSheet.cell(3,2).value.replace("Val",str(Trows))
+                TemplateSheet.cell(Trows,Tcols-4).value = "="+formulaSheet.cell(3,2).value.replace("#VAL#",str(Trows))
 
                 # style
-                # TemplateSheet.cell(Trows,Tcols-2).value =  "="+formulaSheet.cell(4,2).value.replace("Val",str(Trows))
+                TemplateSheet.cell(Trows,Tcols-2).value =  "="+formulaSheet.cell(4,2).value.replace("#VAL#",str(Trows))
 
                 # SADM SKU
-                TemplateSheet.cell(Trows,Tcols-1).value = "="+formulaSheet.cell(5,2).value.replace("Val",str(Trows))
+                TemplateSheet.cell(Trows,Tcols-1).value = "="+formulaSheet.cell(5,2).value.replace("#VAL#",str(Trows))
 
                 # Rate (in Rs.) Order file
-                # TemplateSheet.cell(Trows,Tcols+3).value = "="+formulaSheet.cell(6,2).value.replace("Val",str(Trows))
+                TemplateSheet.cell(Trows,Tcols+3).value = "="+formulaSheet.cell(6,2).value.replace("#VAL#",str(Trows))
 
                 # Closing stk
-                # TemplateSheet.cell(Trows,Tcols+5).value = InputSheet.cell(row,).value
+                TemplateSheet.cell(Trows,Tcols+5).value = "="+formulaSheet.cell(11,2).value.replace("#VAL#",str(Trows)) 
 
                 #Cls stk vs order
-                # TemplateSheet.cell(Trows,Tcols+6).value = InputSheet.cell(row,).value
+                # TemplateSheet.cell(Trows,Tcols+6).value = TemplateSheet.cell(Trows,Tcols+5).value - TemplateSheet.cell(Trows,Tcols+2).value
 
                 # LOCATION2
-                # TemplateSheet.cell(Trows,Tcols+7).value = "="+formulaSheet.cell(7,2).value.replace("Val",str(Trows))
+                TemplateSheet.cell(Trows,Tcols+7).value = "="+formulaSheet.cell(7,2).value.replace("#VAL#",str(Trows))
 
                 #BULK  / DTA  BULK  /  EOSS LOC
-                # TemplateSheet.cell(Trows,Tcols+8).value = "="+formulaSheet.cell(8,2).value.replace("Val",str(Trows))
+                TemplateSheet.cell(Trows,Tcols+8).value = "="+formulaSheet.cell(8,2).value.replace("#VAL#",str(Trows))
 
                 #MRP
-                # TemplateSheet.cell(Trows,Tcols+9).value = "="+formulaSheet.cell(9,2).value.replace("Val",str(Trows))
+                TemplateSheet.cell(Trows,Tcols+9).value = "="+formulaSheet.cell(9,2).value.replace("#VAL#",str(Trows))
 
                 
                 Trows += 1 
