@@ -62,6 +62,7 @@ def generatingPackingSlip():
 
         TemplateSheet.cell(1,3).value = 'SGST/IGST'
         TemplateSheet.cell(1,4).value = InputSheet.cell(6,column).value # IGST/SGST Type
+        print(TemplateSheet.cell(1,4).value,InputSheet.cell(6,column).value)
 
         # Copy EAN to template sheet
         Trows = 8
@@ -95,6 +96,7 @@ def generatingPackingSlip():
 
                 #Cls stk vs order
                 # TemplateSheet.cell(Trows,Tcols+6).value = TemplateSheet.cell(Trows,Tcols+5).value - TemplateSheet.cell(Trows,Tcols+2).value
+                TemplateSheet.cell(Trows,Tcols+6).value = "="+openpyxl.utils.cell.get_column_letter(Tcols+5)+str(Trows) +'-'+openpyxl.utils.cell.get_column_letter(Tcols+2)+str(Trows) 
 
                 # LOCATION2
                 TemplateSheet.cell(Trows,Tcols+7).value = "="+formulaSheet.cell(7,2).value.replace("#VAL#",str(Trows))

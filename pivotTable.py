@@ -23,7 +23,7 @@ def mergeToPivot():
 
     # Adding Processing Date, Order Number and Closing Stock, Diffrence Between Grand Total and 
     # Closing Stock Field into pivot sheet for tempalte
-    pivotWorksheet = load_workbook('./Week/PivotTable/PivotTableoutput.xlsx',data_only=True)
+    pivotWorksheet = load_workbook('./Week/PivotTable/PivotTableoutput.xlsx')
     pivotSheet = pivotWorksheet.active
 
     pivotSheet.insert_rows(1,2)
@@ -59,7 +59,20 @@ def mergeToPivot():
 
 
     pivotWorksheet.save("./Week/PivotTable/PivotTableoutput.xlsx")
-    formulaWorksheet.save("./Week/RequiredFiles/FormulaSheet.xlsx")
+    # formulaWorksheet.save("./Week/RequiredFiles/FormulaSheet.xlsx")
+    
+    pivotWorksheet.close()
+    
+    pivotWorksheet = load_workbook('./Week/PivotTable/PivotTableoutput.xlsx')
+    pivotWorksheet.save("./Week/PivotTable/PivotTableoutput.xlsx")
+    pivotWorksheet.close()
+
+    # pivotWorksheet = load_workbook('./Week/PivotTable/PivotTableoutput.xlsx',data_only=True)
+    # pivotSheet = pivotWorksheet.active
+    # print(pivotSheet.cell(6,3).value)
+    # # pivotWorksheet.save("./Week/PivotTable/PivotTableoutput.xlsx")
+    # pivotWorksheet.close()
+    formulaWorksheet.close()
     print("Generated Requirement Summary file")
     return 'Generated Requirement Summary file'
 
