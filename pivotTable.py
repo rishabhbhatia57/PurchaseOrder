@@ -59,13 +59,13 @@ def mergeToPivot():
 
 
     pivotWorksheet.save("./Week/PivotTable/PivotTableoutput.xlsx")
-    # formulaWorksheet.save("./Week/RequiredFiles/FormulaSheet.xlsx")
+    formulaWorksheet.save("./Week/RequiredFiles/FormulaSheet.xlsx")
     
-    pivotWorksheet.close()
+    # pivotWorksheet.close()
     
-    pivotWorksheet = load_workbook('./Week/PivotTable/PivotTableoutput.xlsx')
-    pivotWorksheet.save("./Week/PivotTable/PivotTableoutput.xlsx")
-    pivotWorksheet.close()
+    # pivotWorksheet = load_workbook('./Week/PivotTable/PivotTableoutput.xlsx')
+    # pivotWorksheet.save("./Week/PivotTable/PivotTableoutput.xlsx")
+    # pivotWorksheet.close()
 
     # pivotWorksheet = load_workbook('./Week/PivotTable/PivotTableoutput.xlsx',data_only=True)
     # pivotSheet = pivotWorksheet.active
