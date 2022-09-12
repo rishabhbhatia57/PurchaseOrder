@@ -1,0 +1,2 @@
+2022-09-09 16:14:12,935 INFO Converted 'D:/ProjectStructure/PL-2022/2022-09-11/10-Download-Files/4000444766.pdf' to 'D:/ProjectStructure/PL-2022/2022-09-11/40-Extract-Excel/4000444766.xlsx' in 50.80 seconds. 
+2022-09-09 16:14:12,937 INFO Converting '4000444767.pdf' to excel '4000444767.xlsx' 
