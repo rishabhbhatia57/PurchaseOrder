@@ -11,6 +11,11 @@ import os
 logger = log.setup_custom_logger('root')
 
 def mergeToPivot(RootFolder,POSource,OrderDate,ClientCode,Formulasheet):
+    ClientName = {
+   "PL":"Pantaloons",
+   "SSL": "Shoppers Stop Limited",
+   "LSL":"Lifestyle Limited"
+}
     try:
         #converting str to datetime
         OrderDate = datetime.strptime(OrderDate, '%Y-%m-%d')
@@ -70,7 +75,11 @@ def mergeToPivot(RootFolder,POSource,OrderDate,ClientCode,Formulasheet):
 
             todayDate = datetime.today().strftime('%Y-%m-%d')
             pivotSheet.cell(2,3).value = 'Order Date'
-            pivotSheet.cell(2,4).value = '-'
+            pivotSheet.cell(2,4).value = OrderDate
+
+            pivotSheet.cell(2,5).value = 'ClientName'
+            pivotSheet.cell(2,6).value = ClientName[ClientCode]
+
 
 
             pivotWorksheet.save(RootFolder+"/"+ClientCode+"-"+year+"/"+OrderDate+"/60-Requirement-Summary/Requirement-Summary.xlsx")

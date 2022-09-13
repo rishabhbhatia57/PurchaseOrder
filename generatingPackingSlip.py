@@ -13,9 +13,8 @@ import os
 
 logger = log.setup_custom_logger('root')
 
-def generatingPackaingSlip(RootFolder,POSource,OrderDate,ClientCode,Formulasheet,TemplateFiles):
+def generatingPackaingSlip(RootFolder,ReqSource,OrderDate,ClientCode,Formulasheet,TemplateFiles):
     try:
-            
         #converting str to datetime
         OrderDate = datetime.strptime(OrderDate, '%Y-%m-%d')
         # extracting year from the order date
@@ -24,7 +23,7 @@ def generatingPackaingSlip(RootFolder,POSource,OrderDate,ClientCode,Formulasheet
         OrderDate = OrderDate.strftime('%Y-%m-%d')
 
         startedTemplating = time.time()
-        sourcePivot = RootFolder+"/"+ClientCode+"-"+year+"/"+OrderDate+"/60-Requirement-Summary/Requirement-Summary.xlsx"
+        sourcePivot = ReqSource
         source = TemplateFiles+"/PackingSlip-Template.xlsx"
         destination = TemplateFiles+"/TemplateFile.xlsx"
         
@@ -87,9 +86,11 @@ def generatingPackaingSlip(RootFolder,POSource,OrderDate,ClientCode,Formulasheet
             Trows = 8
             Tcols = 5
             dbfrows = 2
+            dbfcols = 57
             for row in range(7,rows):
                 # if InputSheet.cell(row,column).value != None or InputSheet.cell(row,column).value != "":
                 if str(InputSheet.cell(row,column).value).isnumeric():
+                    
                         
                     # Copy Qty to template sheet
                     TemplateSheet.cell(Trows,Tcols).value = InputSheet.cell(row,column).value 
@@ -126,72 +127,10 @@ def generatingPackaingSlip(RootFolder,POSource,OrderDate,ClientCode,Formulasheet
 
                     #MRP
                     TemplateSheet.cell(Trows,Tcols+9).value = "="+formulaSheet.cell(9,2).value.replace("#VAL#",str(Trows))
-
+                    
                     # Adding values to DBF
-                    
-                    dbfsheet.cell(dbfrows, 1).value = '='+DBFformula.cell(2,2).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Vouchertypename
-                    dbfsheet.cell(dbfrows, 2).value = '='+DBFformula.cell(2,3).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #CSNNO
-                    dbfsheet.cell(dbfrows, 3).value = '='+DBFformula.cell(2,4).value.replace("#VAL#",str(Trows)) #Date
-                    dbfsheet.cell(dbfrows, 4).value = '='+DBFformula.cell(2,5).value.replace("#VAL#",str(Trows)) #Reference
-                    dbfsheet.cell(dbfrows, 5).value = '='+DBFformula.cell(2,6).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #REF1  
-                    dbfsheet.cell(dbfrows, 6).value = '='+DBFformula.cell(2,7).value.replace("#VAL#",str(Trows)) #Dealer Name
-                    dbfsheet.cell(dbfrows, 7).value = '='+DBFformula.cell(2,8).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) # PriceLevel
-                    dbfsheet.cell(dbfrows, 8).value = '='+DBFformula.cell(2,9).value.replace("#VAL#",str(Trows)) #ItemName/ SKU
-                    dbfsheet.cell(dbfrows, 9).value = '='+DBFformula.cell(2,10).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #GODOWN
-                    dbfsheet.cell(dbfrows, 10).value = '='+DBFformula.cell(2,11).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Qty
-                    dbfsheet.cell(dbfrows, 11).value = '='+DBFformula.cell(2,12).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Rate
-                    dbfsheet.cell(dbfrows, 12).value = '='+DBFformula.cell(2,13).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #SUBTOTAL
-                    dbfsheet.cell(dbfrows, 13).value = '='+DBFformula.cell(2,14).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #DISCPERC
-                    dbfsheet.cell(dbfrows, 14).value = '='+DBFformula.cell(2,15).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #DISCAMT
-                    dbfsheet.cell(dbfrows, 15).value = '='+DBFformula.cell(2,16).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #ITEMVALUE
-                    dbfsheet.cell(dbfrows, 16).value = '='+DBFformula.cell(2,17).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #LedgerAcct
-                    dbfsheet.cell(dbfrows, 17).value = '='+DBFformula.cell(2,18).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #CATEGORY1
-                    dbfsheet.cell(dbfrows, 18).value = '='+DBFformula.cell(2,19).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #COSTCENT1
-                    dbfsheet.cell(dbfrows, 19).value = '='+DBFformula.cell(2,20).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #CATEGORY2
-                    dbfsheet.cell(dbfrows, 20).value = '='+DBFformula.cell(2,21).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #COSTCENT2
-                    dbfsheet.cell(dbfrows, 21).value = '='+DBFformula.cell(2,22).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #CATEGORY3
-                    dbfsheet.cell(dbfrows, 22).value = '='+DBFformula.cell(2,23).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #COSTCENT3
-                    dbfsheet.cell(dbfrows, 23).value = '='+DBFformula.cell(2,24).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #CATEGORY4
-                    dbfsheet.cell(dbfrows, 24).value = '='+DBFformula.cell(2,25).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #COSTCENT4
-                    dbfsheet.cell(dbfrows, 25).value = '='+DBFformula.cell(2,26).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #ITEMTOTAL
-                    dbfsheet.cell(dbfrows, 26).value = '='+DBFformula.cell(2,27).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #TOTALQTY
-                    dbfsheet.cell(dbfrows, 27).value = '='+DBFformula.cell(2,28).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #CDISCHEAD
-                    dbfsheet.cell(dbfrows, 28).value = '='+DBFformula.cell(2,29).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #CDISCPERC
-                    dbfsheet.cell(dbfrows, 29).value = '='+DBFformula.cell(2,30).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #COMMONDISC
-                    dbfsheet.cell(dbfrows, 30).value = '='+DBFformula.cell(2,31).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #BEFORETAX
-                    dbfsheet.cell(dbfrows, 31).value = "" #TAXHEAD
-                    dbfsheet.cell(dbfrows, 32).value = "" #TAXPERC
-                    dbfsheet.cell(dbfrows, 33).value = "" #TAXAMT
-                    dbfsheet.cell(dbfrows, 34).value = "" #STAXHEAD
-                    dbfsheet.cell(dbfrows, 35).value = "" #STAXPERC
-                    dbfsheet.cell(dbfrows, 36).value = "" #STAXAMT
-                    dbfsheet.cell(dbfrows, 37).value = '='+DBFformula.cell(2,38).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #ITAXHEAD
-                    dbfsheet.cell(dbfrows, 38).value = '='+DBFformula.cell(2,39).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #ITAXPERC
-                    dbfsheet.cell(dbfrows, 39).value = '='+DBFformula.cell(2,40).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #ITAXAMT
-                    dbfsheet.cell(dbfrows, 40).value = '='+DBFformula.cell(2,41).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #NETAMT
-                    dbfsheet.cell(dbfrows, 41).value = '='+DBFformula.cell(2,42).value.replace("#VAL#",str(Trows)) #ROUND
-                    dbfsheet.cell(dbfrows, 42).value = '='+DBFformula.cell(2,43).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #ROUND1
-                    dbfsheet.cell(dbfrows, 43).value = '='+DBFformula.cell(2,44).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #REFTYPE
-                    dbfsheet.cell(dbfrows, 44).value = '='+DBFformula.cell(2,45).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Name
-                    dbfsheet.cell(dbfrows, 45).value = '='+DBFformula.cell(2,46).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #REFAMT
-                    dbfsheet.cell(dbfrows, 46).value = '='+DBFformula.cell(2,47).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Narration
-                    dbfsheet.cell(dbfrows, 47).value = '='+DBFformula.cell(2,48).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Transport
-                    dbfsheet.cell(dbfrows, 48).value = '='+DBFformula.cell(2,49).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #transmode
-                    dbfsheet.cell(dbfrows, 49).value = '='+DBFformula.cell(2,50).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #pymtterm
-                    dbfsheet.cell(dbfrows, 50).value = '='+DBFformula.cell(2,51).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #OrderNo/PO number
-                    dbfsheet.cell(dbfrows, 51).value = '='+DBFformula.cell(2,52).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #orddate
-                    dbfsheet.cell(dbfrows, 52).value = '='+DBFformula.cell(2,53).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #DANO
-                    dbfsheet.cell(dbfrows, 53).value = '='+DBFformula.cell(2,54).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Delyadd1
-                    dbfsheet.cell(dbfrows, 54).value = '='+DBFformula.cell(2,55).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Delyadd2
-                    dbfsheet.cell(dbfrows, 55).value = '='+DBFformula.cell(2,56).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Delyadd3
-                    dbfsheet.cell(dbfrows, 56).value = '='+DBFformula.cell(2,57).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows)) #Delyadd4
-
-                    
-
-
-
-
-                    # print(dbfrows, Trows)
+                    for i in range(1,dbfcols):
+                        dbfsheet.cell(dbfrows, i).value = '='+DBFformula.cell(2,i+1).value.replace("#VAL#",str(Trows)).replace("#DBFROWS#",str(dbfrows))
                     
                     Trows += 1
                     dbfrows += 1 

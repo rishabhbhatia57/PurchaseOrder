@@ -11,6 +11,8 @@ import log
 # inputPath = '4000441961.pdf'
 # outputPath = "output.xlsx"
 
+logger = log.setup_custom_logger('root')
+
 def getFilesToProcess(RootFolder,POSource,OrderDate,ClientCode):
     #converting str to datetime
     OrderDate = datetime.strptime(OrderDate, '%Y-%m-%d')
@@ -38,7 +40,7 @@ def getFilesToProcess(RootFolder,POSource,OrderDate,ClientCode):
         logger.error("Error while processing files: "+str(e))
 
 
-logger = log.setup_custom_logger('root')
+
 
 # Extracting data from pdf and storing in csv
 def pdfToTable(inputPath,outputPath,RootFolder,POSource,OrderDate,ClientCode,filecsv):
