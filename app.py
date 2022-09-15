@@ -1,28 +1,17 @@
 from flask import Flask, jsonify, request
 import json
 from flask_cors import CORS
-from main import scriptStarted, downloadFiles, scriptEnded, checkFolderStructure, mergeExcelsToOne
-from pdfToTable import pdfToTable,getFilesToProcess
-from colSplitting import colSplitting
-from pivotTable import mergeToPivot
-from generatingPackingSlip import generatingPackaingSlip
+from main import scriptStarted, downloadFiles, scriptEnded, checkFolderStructure, mergeExcelsToOne,mergeToPivot, generatingPackaingSlip, pdfToTable,getFilesToProcess
 import os
 from datetime import datetime
 import log
 import sys
 import json
 import base64
+from config import ConfigFolderPath
 
 
-
-ClientCode = {
-   "PL":"Pantaloons",
-   "SSL": "Shoppers Stop Limited",
-   "LSL":"Lifestyle Limited"
-}
-
-
-with open('C:/Users/HP/Desktop/PO Metadata/Configfiles-Folder/config.json', 'r') as jsonFile:
+with open(ConfigFolderPath+'config.json', 'r') as jsonFile:
     config = json.load(jsonFile)
     formulasheetpath = config['formulaFolder']
     masterspath = config['masterFolder']
@@ -68,8 +57,19 @@ if __name__ == "__main__":
         clientcode = sys.argv[2].replace('#', ' ')
         orderdate =  sys.argv[3].replace('#', ' ')
         reqsource = sys.argv[4].replace('#', ' ')
-        clientname = ClientCode[clientcode]
-        logger.info("Client Name: "+clientname+" Client Code: "+ClientCode+" Order Date: "+orderdate+" PO Folder Path: '"+reqsource+"'" )
+        
+        with open(ConfigFolderPath+'client.json', 'r') as jsonFile:
+            config = json.load(jsonFile)
+            clientNameDict = config
+            key_list = list(clientNameDict.keys())
+            val_list = list(clientNameDict.values())
+            position = val_list.index(clientcode)
+            print(config)
+            print(key_list)
+            clientname = key_list[position]
+        print(clientname)
+        logger.info("Client Name: "+clientname+" Client Code: "+clientcode+" Order Date: "+orderdate+" PO Folder Path: '"+reqsource+"'" )
+        print("Client Name: "+clientname+" Client Code: "+clientcode+" Order Date: "+orderdate+" PO Folder Path: '"+reqsource+"'")
     # Phase II
         scriptStarted()
         generatingPackaingSlip(RootFolder=destinationpath,ReqSource=reqsource,OrderDate=orderdate,ClientCode=clientcode,Formulasheet=formulasheetpath,TemplateFiles=templatespath)
